@@ -3,6 +3,7 @@ This module contains PokeType, TypeEffectiveness and an abstract version of the 
 """
 from abc import ABC
 from enum import Enum
+import csv
 from data_structures.referential_array import ArrayR
 
 class PokeType(Enum):
@@ -42,13 +43,16 @@ class TypeEffectiveness:
         Returns:
             float: The effectiveness of the attack, as a float value between 0 and 4.
         """
-        raise NotImplementedError
+        with open('type_effectiveness.csv', mode='r') as file:
+            reader = csv.reader(file)
+            effectiveness_matrix = list(reader)
+            return float(effectiveness_matrix[attack_type.value][defend_type.value])
 
     def __len__(self) -> int:
         """
         Returns the number of types of Pokemon
         """
-        raise NotImplementedError
+        return len(PokeType)
 
 
 class Pokemon(ABC): # pylint: disable=too-few-public-methods, too-many-instance-attributes
@@ -207,3 +211,7 @@ class Pokemon(ABC): # pylint: disable=too-few-public-methods, too-many-instance-
         """
         return f"{self.name} (Level {self.level}) with {self.get_health()} health \
                 and {self.get_experience()} experience"
+
+
+print(PokeType.get_effectiveness(PokeType.FIRE, PokeType.WATER))  # Output: 0.5
+print(len(PokeType))  # Output: 15
