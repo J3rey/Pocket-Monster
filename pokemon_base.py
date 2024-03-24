@@ -3,7 +3,6 @@ This module contains PokeType, TypeEffectiveness and an abstract version of the 
 """
 from abc import ABC
 from enum import Enum
-import csv
 from data_structures.referential_array import ArrayR
 
 class PokeType(Enum):
@@ -29,7 +28,7 @@ class PokeType(Enum):
 class TypeEffectiveness:
     """
     Represents the type effectiveness of one Pokemon type against another.
-    """
+    """    
 
     @classmethod
     def get_effectiveness(cls, attack_type: PokeType, defend_type: PokeType) -> float:
@@ -43,17 +42,29 @@ class TypeEffectiveness:
         Returns:
             float: The effectiveness of the attack, as a float value between 0 and 4.
         """
-        with open('type_effectiveness.csv', mode='r') as file:
-            reader = csv.reader(file)
-            effectiveness_matrix = list(reader)
-            return float(effectiveness_matrix[attack_type.value][defend_type.value])
+
+        """
+        Time complexity is ??
+        """
+        # Reads the type_effectiveness.csv and turns it into array via ArrayR
+        with open('type_effectiveness.csv', "r") as file:
+            header, rest = file.read().strip().split("\n", maxsplit=1)
+            header = header.split(",")
+            rest = rest.replace("\n", ",").split(",")
+            a_header = ArrayR(len(header))
+            a_all = ArrayR(len(rest))
+            for i in range(len(header)):
+                a_header[i] = header[i]
+            for i in range(len(rest)):
+                a_all[i] = float(rest[i])
+            
 
     def __len__(self) -> int:
         """
         Returns the number of types of Pokemon
         """
+        # Returns the length of PokeType enum class
         return len(PokeType)
-
 
 class Pokemon(ABC): # pylint: disable=too-few-public-methods, too-many-instance-attributes
     """
@@ -183,6 +194,7 @@ class Pokemon(ABC): # pylint: disable=too-few-public-methods, too-many-instance-
         Increases the level of the Pokemon by 1, and evolves the Pokemon if it has
           reached the level required for evolution.
         """
+
         self.level += 1
         if len(self.evolution_line) > 0 and self.evolution_line.index\
             (self.name) != len(self.evolution_line)-1:
@@ -193,7 +205,14 @@ class Pokemon(ABC): # pylint: disable=too-few-public-methods, too-many-instance-
         Evolves the Pokemon to the next stage in its evolution line, and updates
           its attributes accordingly.
         """
-        raise NotImplementedError
+        # Levels all base stats by x1.5
+        # Pokemon evolves to next in line if not in final evolution
+        if len(self.evolution_line) > 0 and self.evolution_line.index(self.name) != len(self.evolution_line) - 1:
+            self.name = self.evolution_line[self.evolution_line.index(self.name) + 1]
+            self.health *= 1.5
+            self.battle_power *= 1.5
+            self.speed *= 1.5
+            self.defence *= 1.5
 
     def is_alive(self) -> bool:
         """
@@ -211,7 +230,4 @@ class Pokemon(ABC): # pylint: disable=too-few-public-methods, too-many-instance-
         """
         return f"{self.name} (Level {self.level}) with {self.get_health()} health \
                 and {self.get_experience()} experience"
-
-
-print(PokeType.get_effectiveness(PokeType.FIRE, PokeType.WATER))  # Output: 0.5
-print(len(PokeType))  # Output: 15
+    
