@@ -28,7 +28,7 @@ class PokeType(Enum):
 class TypeEffectiveness:
     """
     Represents the type effectiveness of one Pokemon type against another.
-    """    
+    """
 
     @classmethod
     def get_effectiveness(cls, attack_type: PokeType, defend_type: PokeType) -> float:
@@ -44,26 +44,29 @@ class TypeEffectiveness:
         """
 
         """
-        Time complexity is ??
+        Overall complexity of the code is O(n * m),
+        where n is the number of rows in the file and m is the number of elements in each row.
         """
-        # Reads the type_effectiveness.csv and turns it into array via ArrayR
+    
+        EFFECT_TABLE = ArrayR(len(PokeType))  # Initialize the array
+
         with open('type_effectiveness.csv', "r") as file:
-            header, rest = file.read().strip().split("\n", maxsplit=1)
-            header = header.split(",")
-            rest = rest.replace("\n", ",").split(",")
-            a_header = ArrayR(len(header))
-            a_all = ArrayR(len(rest))
-            for i in range(len(header)):
-                a_header[i] = header[i]
-            for i in range(len(rest)):
-                a_all[i] = float(rest[i])
-            
+            next(file)  # Skips the first line
+            for i, row in enumerate(file):
+                rowlist = row.strip().split(',')
+                row_array = ArrayR(len(rowlist))  # Creates a new array for this row
+                for j, value in enumerate(rowlist):
+                    row_array[j] = float(value)  # Converts each value to float and store it in the array
+                EFFECT_TABLE[i] = row_array  # Stores the row arrays in EFFECT_TABLE
+        
+        cls.float = EFFECT_TABLE[attack_type.value][defend_type.value] # Gets float of enum index values
+        return cls.float
+
 
     def __len__(self) -> int:
         """
         Returns the number of types of Pokemon
         """
-        # Returns the length of PokeType enum class
         return len(PokeType)
 
 class Pokemon(ABC): # pylint: disable=too-few-public-methods, too-many-instance-attributes
