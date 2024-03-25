@@ -4,6 +4,7 @@ This module contains PokeType, TypeEffectiveness and an abstract version of the 
 from abc import ABC
 from enum import Enum
 from data_structures.referential_array import ArrayR
+import math
 
 class PokeType(Enum):
     """
@@ -41,11 +42,6 @@ class TypeEffectiveness:
 
         Returns:
             float: The effectiveness of the attack, as a float value between 0 and 4.
-        """
-
-        """
-        Overall complexity of the code is O(n * m),
-        where n is the number of rows in the file and m is the number of elements in each row.
         """
     
         EFFECT_TABLE = ArrayR(len(PokeType))  # Initialize the array
@@ -179,7 +175,20 @@ class Pokemon(ABC): # pylint: disable=too-few-public-methods, too-many-instance-
         Returns:
             int: The damage that this Pokemon inflicts on the other Pokemon during an attack.
         """
-        raise NotImplementedError
+        other_pokemon = Pokemon
+        # Compute attack stat vs defence stat
+        if other_pokemon.get_defence() < self.get_battle_power() / 2:
+            damage = self.get_battle_power() - other_pokemon.get_defence()
+        elif other_pokemon.get_defence() < self.get_battle_power():
+            damage = math.ceil(self.get_battle_power() * 5/8 - other_pokemon.get_defence() / 4)
+        else:
+            damage = math.ceil(self.get_battle_power() / 4)
+
+        # Apply type effectiveness
+        damage_multiplier = TypeEffectiveness.get_effectiveness(self.get_poketype,other_pokemon.get_poketype)
+        damage = damage_multiplier * damage      
+
+        return damage
 
     def defend(self, damage: int) -> None:
         """
