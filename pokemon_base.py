@@ -164,7 +164,7 @@ class Pokemon(ABC): # pylint: disable=too-few-public-methods, too-many-instance-
         """
         return self.battle_power
 
-    def attack(self, other_pokemon) -> int:
+    def attack(self, other_pokemon) -> float:
         """
         Calculates and returns the damage that this Pokemon inflicts on the
         other Pokemon during an attack.
@@ -185,7 +185,7 @@ class Pokemon(ABC): # pylint: disable=too-few-public-methods, too-many-instance-
             damage = math.ceil(self.get_battle_power() / 4)
 
         # Apply type effectiveness
-        damage_multiplier = TypeEffectiveness.get_effectiveness(self.get_poketype,other_pokemon.get_poketype)
+        damage_multiplier = TypeEffectiveness.get_effectiveness(self.get_poketype, other_pokemon.get_poketype)
         damage = damage_multiplier * damage      
 
         return damage
@@ -240,6 +240,5 @@ class Pokemon(ABC): # pylint: disable=too-few-public-methods, too-many-instance-
         Return a string representation of the Pokemon instance in the format:
         <name> (Level <level>) with <health> health and <experience> experience
         """
-        return f"{self.name} (Level {self.level}) with {self.get_health()} health \
-                and {self.get_experience()} experience"
+        return f"{self.name} (Level {self.level}) with {self.get_health()} health and {self.get_experience()} experience"
     
