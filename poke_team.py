@@ -87,11 +87,15 @@ class PokeTeam:
     def __len__(self):
         return len(self.team)
 
+
     def __str__(self):
-        print("Current Pokemon Team:")
-        pokemon_name = self.team[i].get().get_name()
-        for i in range(len(self.team)):
-            print(f'{pokemon_name}\n')
+        team_str = "Pokemon Team:\n"
+        for pokemon in self.team:
+            team_str += f"{pokemon.name}\n"
+            
+        return team_str
+        
+
 
 class Trainer:
 
