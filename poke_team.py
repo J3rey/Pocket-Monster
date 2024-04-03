@@ -49,8 +49,13 @@ class PokeTeam:
         """
         # Heals all Pokémon to their original HP
         for pokemon in self.team:
-            # pokemon.health = Pokemon.health
             pokemon.health = Pokemon.health # This does not work
+
+        # # Heals all Pokémon to their original HP
+        # pokemon_health  = Pokemon.get_health
+        # for pokemon in self.team:
+        #     for health in pokemon:
+        #         pokemon_health = base_health
 
     def assign_team(self, criterion: str = None) -> None:
         #Next Task
@@ -65,6 +70,11 @@ class PokeTeam:
         raise NotImplementedError
 
     def __getitem__(self, index: int):
+        """
+        Best Case for __getitem__ is O(1), if the user gets a successful index the first time
+        Worst Case for __getitem__ is O(n), where n is the number of attempts the user inputs,
+        as it will repeat n amount of times until the user get a valid index
+        """
         poke_team = self.team # Makes poke_team the array
         index = int(input("Enter an index to retrieve a Pokemon: ")) # Ask user input what index
         try:
@@ -75,9 +85,17 @@ class PokeTeam:
         
 
     def __len__(self):
+        """
+        Best and Worse Case is O(1) as it only returns 
+        """
         return len(self.team) #returns length of team
 
     def __str__(self):
+        """
+        Best Case for __str__ is O(1) if the list is empty
+        Worst Case for __str__ is O(n), where n is the length of the team, as it 
+        would have to loop through the team
+        """
         team_str = "Pokemon Team:\n"
         # Displays all pokemon in the current team
         for pokemon in self.team:
@@ -89,19 +107,28 @@ class PokeTeam:
 class Trainer:
 
     def __init__(self, name) -> None:
-        raise NotImplementedError
+        self.name = name # Initialises Trainer Class
+        self.poke_team = PokeTeam()
+        self.pokedex = PokeTeam.POKE_LIST
 
     def pick_team(self, method: str) -> None:
-        raise NotImplementedError
+        method = input('Enter r to choose team randomly or enter m to pick manually') # Asks user to choose method
+        if method.lower() == 'r':
+            PokeTeam.choose_randomly()
+        elif method.lower() == 'm':
+            PokeTeam.choose_manually()
+        else:
+            raise ValueError("Invalid input. Enter either 1 or 2.") # If input is invalid, raise error
 
     def get_team(self) -> PokeTeam:
-        raise NotImplementedError
-
+        return self.poke_team # Gets current pokemon team
+    
     def get_name(self) -> str:
-        raise NotImplementedError
+        return self.name # Gets trainer name
 
     def register_pokemon(self, pokemon: Pokemon) -> None:
-        raise NotImplementedError
+        poke_type = pokemon.poketype # Get the PokeType of the pokemon
+        self.pokedex.register_pokemon(poke_type) # Register the pokemon in the Pokedex
 
     def get_pokedex_completion(self) -> float:
         raise NotImplementedError
