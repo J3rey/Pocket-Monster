@@ -3,6 +3,7 @@ import random
 from typing import List
 from battle_mode import BattleMode
 from ctypes import py_object
+import data_structures.set_adt
 
 class PokeTeam:
     TEAM_LIMIT = 6
@@ -112,7 +113,7 @@ class Trainer:
         self.pokedex = PokeTeam.POKE_LIST
 
     def pick_team(self, method: str) -> None:
-        method = input('Enter r to choose team randomly or enter m to pick manually') # Asks user to choose method
+        method = input('Enter r to choose team randomly or enter m to pick manually: ') # Asks user to choose method
         if method.lower() == 'r':
             PokeTeam.choose_randomly()
         elif method.lower() == 'm':
@@ -127,14 +128,28 @@ class Trainer:
         return self.name # Gets trainer name
 
     def register_pokemon(self, pokemon: Pokemon) -> None:
-        poke_type = pokemon.poketype # Get the PokeType of the pokemon
+        
+
+
+
+        poke_type = Pokemon.get_poketype # Get the PokeType of the pokemon
         self.pokedex.register_pokemon(poke_type) # Register the pokemon in the Pokedex
 
     def get_pokedex_completion(self) -> float:
-        raise NotImplementedError
+        """
+        Best and Worse Case is O(1) as all operations are constant time
+        """
+        pokedex_completion = len(self.registered_types) / len(PokeType) # Divides current registered types with len(PokeType) (15)
+        return round(pokedex_completion, 2) # Round to 2d.p
 
     def __str__(self) -> str:
-        raise NotImplementedError
+        """
+        Best and Worse Case is O(1) as just print
+        """
+        print(f"Trainer {Trainer.get_name}\n Pokedex Completion: {Trainer.get_pokedex_completion}%")
+              
+
+                
 
 if __name__ == '__main__':
     t = Trainer('Ash')
