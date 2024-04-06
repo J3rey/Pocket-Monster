@@ -12,7 +12,17 @@ class Battle:
         self.criterion = criterion
 
     def commence_battle(self) -> Trainer | None:
-        raise NotImplementedError
+        if self.battle_mode == BattleMode.SET:
+            return self.set_battle()
+        elif self.battle_mode == BattleMode.ROTATE:
+            return self.rotate_battle()
+        elif self.battle_mode == BattleMode.OPTIMISE:
+            return self.optimise_battle()
+        else:
+            raise ValueError("Please select valid BattleMode")
+        
+        return ??
+        
 
     def _create_teams(self) -> None:
         raise NotImplementedError
