@@ -3,7 +3,8 @@ import random
 from typing import List
 from battle_mode import BattleMode
 from ctypes import py_object
-import data_structures.set_adt
+from data_structures.bset import BSet
+from data_structures.set_adt import Set 
 
 class PokeTeam:
     TEAM_LIMIT = 6
@@ -49,14 +50,9 @@ class PokeTeam:
         Best and Worse Case is O(n), where n is the length of team
         """
         # Heals all Pokémon to their original HP
+        current_health = Pokemon.get_health()
         for pokemon in self.team:
-            pokemon.health = Pokemon.health # This does not work
-
-        # # Heals all Pokémon to their original HP
-        # pokemon_health  = Pokemon.get_health
-        # for pokemon in self.team:
-        #     for health in pokemon:
-        #         pokemon_health = base_health
+            pokemon.health = current_health # This doesn't work but I was trying to get the original health from pokemon.py and assign it to the current pokemons health
 
     def assign_team(self, criterion: str = None) -> None:
         #Next Task
@@ -109,10 +105,14 @@ class Trainer:
 
     def __init__(self, name) -> None:
         self.name = name # Initialises Trainer Class
-        self.poke_team = PokeTeam()
-        self.pokedex = PokeTeam.POKE_LIST
+        self.poke_team = PokeTeam() # Initialises Pokemon Team
+        self.pokedex = BSet(len(PokeType)+1)# Initialises Trainer Class
 
     def pick_team(self, method: str) -> None:
+        """
+        Worst Case is O(1) as this function only contains return functions which are constant time
+        Worst Case = Best Case = O(1)
+        """
         method = input('Enter r to choose team randomly or enter m to pick manually: ') # Asks user to choose method
         if method.lower() == 'r':
             PokeTeam.choose_randomly()
@@ -128,18 +128,14 @@ class Trainer:
         return self.name # Gets trainer name
 
     def register_pokemon(self, pokemon: Pokemon) -> None:
-        
+        self.pokedex.add(pokemon.get_poketype().value+1) # Gets type of pokemon, assigns to a numerical value and adds a 1 to it in Pokedex
 
-
-
-        poke_type = Pokemon.get_poketype # Get the PokeType of the pokemon
-        self.pokedex.register_pokemon(poke_type) # Register the pokemon in the Pokedex
 
     def get_pokedex_completion(self) -> float:
         """
         Best and Worse Case is O(1) as all operations are constant time
         """
-        pokedex_completion = len(self.registered_types) / len(PokeType) # Divides current registered types with len(PokeType) (15)
+        pokedex_completion = sum(self.pokedex) / len(PokeType) # Divides current registered types with len(PokeType) (15)
         return round(pokedex_completion, 2) # Round to 2d.p
 
     def __str__(self) -> str:
@@ -147,10 +143,7 @@ class Trainer:
         Best and Worse Case is O(1) as just print
         """
         print(f"Trainer {Trainer.get_name}\n Pokedex Completion: {Trainer.get_pokedex_completion}%")
-              
-
                 
-
 if __name__ == '__main__':
     t = Trainer('Ash')
     print(t)
