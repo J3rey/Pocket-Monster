@@ -113,10 +113,9 @@ class Trainer:
         Worst Case is O(1) as this function only contains return functions which are constant time
         Worst Case = Best Case = O(1)
         """
-        method = input('Enter r to choose team randomly or enter m to pick manually: ') # Asks user to choose method
-        if method.lower() == 'r':
+        if method == "Random":
             PokeTeam.choose_randomly()
-        elif method.lower() == 'm':
+        elif method == "Manual":
             PokeTeam.choose_manually()
         else:
             raise ValueError("Invalid input. Enter either 1 or 2.") # If input is invalid, raise error
