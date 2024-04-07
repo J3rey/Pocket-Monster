@@ -20,12 +20,10 @@ class Battle:
             return self.optimise_battle()
         else:
             raise ValueError("Please select valid BattleMode")
-        
-        return ??
-        
-
+    
     def _create_teams(self) -> None:
-        raise NotImplementedError
+        self.trainer_1 = PokeTeam.assemble_team
+        self.trainer_2 = PokeTeam.assemble_team
 
     # Note: These are here for your convenience
     # If you prefer you can ignore them

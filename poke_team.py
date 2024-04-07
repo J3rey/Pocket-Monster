@@ -52,9 +52,9 @@ class PokeTeam:
         Best and Worse Case is O(n), where n is the length of team
         """
         # Heals all Pokémon to their original HP
-        current_health = Pokemon.get_health()
         for pokemon in self.team:
-            pokemon.health = current_health # This doesn't work but I was trying to get the original health from pokemon.py and assign it to the current pokemons health
+            pokemon.get_health = pokemon.health  # Resets current health to base health
+            pokemon.is_alive() # Calls method to make pokemon register as alive
 
     def assign_team(self, criterion: str = None) -> None:
         #Next Task
@@ -105,20 +105,6 @@ class PokeTeam:
 
             #idk
             raise NotImplementedError
-                
-
-
-            
-
-            
-
-
-
-
-
-        # SET MODE: If special is called during battle, this should reverse the first half of the team
-
-        # ROTATE MODE: If special is called during battle, this should reverse the bottom half of the team
 
         # OPTIMISE MODE: it toggles the sorting order (from ascending to descending and vice-versa)
         
@@ -140,7 +126,7 @@ class PokeTeam:
         """
         Best and Worse Case is O(1) as it only returns 
         """
-        return len(self.team) #returns length of team
+        return len(self.team) # Returns length of team
 
     def __str__(self):
         """
@@ -151,10 +137,8 @@ class PokeTeam:
         team_str = "Pokemon Team:\n"
         # Displays all pokemon in the current team
         for pokemon in self.team:
-            team_str += f"{pokemon.name}\n"
+            team_str += f"{pokemon.name}\n" 
         return team_str
-        
-
 
 class Trainer:
 
@@ -196,8 +180,8 @@ class Trainer:
         return round(pokedex_completion, 2) # Round to 2d.p
 
     def __str__(self) -> str:
-        print(f"Trainer {Trainer.get_name}\n Pokedex Completion: {Trainer.get_pokedex_completion}%")
-                
+        return f"Trainer {self.get_name()} Pokedex Completion: {self.get_pokedex_completion()}%"
+              
 if __name__ == '__main__':
     t = Trainer('Ash')
     print(t)
