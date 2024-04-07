@@ -16,7 +16,7 @@ class PokeTeam:
     CRITERION_LIST = ["health", "defence", "battle_power", "speed", "level"]
 
     def __init__(self):
-        self.team = None # change None value if necessary
+        self.team = ArrayR(6) # Initialise array size
         self.team_count = 0
 
     """
@@ -157,7 +157,7 @@ class Trainer:
         elif method == "Manual":
             PokeTeam.choose_manually()
         else:
-            raise ValueError("Invalid input. Enter either 1 or 2.") # If input is invalid, raise error
+            raise ValueError("Invalid input. Enter either 'Random' or 'Manual'") # If input is invalid, raise error
 
     def get_team(self) -> PokeTeam:
         return self.poke_team # Gets current pokemon team
@@ -176,11 +176,12 @@ class Trainer:
         """
         Best and Worse Case is O(1) as all operations are constant time
         """
-        pokedex_completion = sum(self.pokedex) / len(PokeType) # Divides current registered types with len(PokeType) (15)
-        return round(pokedex_completion, 2) # Round to 2d.p
+        pokedex_completion = len(self.pokedex) / len(PokeType) # Divides current registered types with len(PokeType) (15)
+        return round(pokedex_completion, 1) # Round to 1d.p
 
     def __str__(self) -> str:
-        return f"Trainer {self.get_name()} Pokedex Completion: {self.get_pokedex_completion()}%"
+        completed_pokedex = int(self.get_pokedex_completion() * 100)
+        return f"Trainer {self.get_name()} Pokedex Completion: {completed_pokedex}%"
               
 if __name__ == '__main__':
     t = Trainer('Ash')
