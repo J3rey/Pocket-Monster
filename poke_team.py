@@ -3,8 +3,12 @@ import random
 from typing import List
 from battle_mode import BattleMode
 from ctypes import py_object
+from battle_mode import BattleMode
 from data_structures.bset import BSet
 from data_structures.set_adt import Set 
+from data_structures.stack_adt import ArrayStack
+from data_structures.queue_adt import CircularQueue
+from data_structures.array_sorted_list import ArraySortedList
 
 class PokeTeam:
     TEAM_LIMIT = 6
@@ -59,9 +63,26 @@ class PokeTeam:
         raise NotImplementedError
 
     def assemble_team(self, battle_mode: BattleMode) -> None:
-        #Next Task
-        raise NotImplementedError
-
+        """
+        Worst Case is O(n), where n is the length of the team, as it needs to append to the new specified teams, set, rotate and optimise
+        Best Case is O(n), where n is the length of the team, as it need to choose a battle_mode must be chosen
+        """
+        if battle_mode == BattleMode.SET: # If battlemode matches with enumerate
+            set_team = ArrayStack(len(self.team)) # Order team in stack
+            for pokemon in self.team:
+                set_team.push(pokemon)
+            self.team = set_team # New team order
+        elif battle_mode == BattleMode.ROTATE: # If battlemode matches with enumerate
+            rotate_team = CircularQueue(len(self.team)) # Order team into circular queue
+            for pokemon in self.team:
+                rotate_team.append(pokemon)
+            self.team = rotate_team # New team order
+        elif battle_mode == BattleMode.OPTIMISE: # If battlemode matches with enumerate
+            optimise_team = ArraySortedList(len(self.team)) # Order team in specified order
+            for pokemon in self.team:
+                optimise_team.add(pokemon)
+            self.team = optimise_team # New team order
+    
     def special(self, battle_mode: BattleMode) -> None:
         #Next Task
         raise NotImplementedError
