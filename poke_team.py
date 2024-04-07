@@ -27,7 +27,6 @@ class PokeTeam:
     """
     def choose_manually(self):
         self.team = ArrayR(1) # Initialise array size
-
         while len(self.team) < PokeTeam.TEAM_LIMIT: # While team Array is less TEAM_LIMIT (6)
             pokemon_choice = input("Enter a Pokemon's name or 'done': ") # Requests user pokemon choices
             if pokemon_choice.lower() == 'done': # If user requests done, break
@@ -37,8 +36,7 @@ class PokeTeam:
                     self.team[i] = pokemon_choice
                     self.team += 1
             else:
-                print("Inavlid Pokemon name, try again") # If user inputs invalid pokemon, try again until done or reached team limit
-
+                print("Invalid Pokemon name, try again") # If user inputs invalid pokemon, try again until done or reached team limit
 
     def choose_randomly(self) -> None:
         all_pokemon = get_all_pokemon_types()
@@ -68,39 +66,75 @@ class PokeTeam:
         Best Case is O(n), where n is the length of the team, as it need to choose a battle_mode must be chosen
         """
         if battle_mode == BattleMode.SET: # If battlemode matches with enumerate
-            set_team = ArrayStack(len(self.team)) # Order team in stack
+            set_team = ArrayStack(len(self.team)) # Initialise ArrayStack
             for pokemon in self.team:
                 set_team.push(pokemon)
             self.team = set_team # New team order
         elif battle_mode == BattleMode.ROTATE: # If battlemode matches with enumerate
-            rotate_team = CircularQueue(len(self.team)) # Order team into circular queue
+            rotate_team = CircularQueue(len(self.team)) # Initialise CircularQueue
             for pokemon in self.team:
                 rotate_team.append(pokemon)
             self.team = rotate_team # New team order
         elif battle_mode == BattleMode.OPTIMISE: # If battlemode matches with enumerate
-            optimise_team = ArraySortedList(len(self.team)) # Order team in specified order
+            optimise_team = ArraySortedList(len(self.team)) # Initialise ArraySortedList
             for pokemon in self.team:
                 optimise_team.add(pokemon)
             self.team = optimise_team # New team order
     
     def special(self, battle_mode: BattleMode) -> None:
-        #Next Task
+
+        if battle_mode == BattleMode.SET: # If battlemode matches with enumerate
+            x = len(self.team) # Length of team
+            temp_team = x // 2 
+            half_stack = ArrayStack(temp_team) 
+            for i in range(temp_team): # LIFO, pushes first 3 pokemon into temp team
+                half_stack.push(self.team[i])
+            for i in range(half_stack): 
+                self.team[i] = half_stack.pop() # LIFO, pops first 3 pokemon into original team, reversing first 3 pokemon
+            return self.team
+        elif battle_mode == BattleMode.ROTATE: # If battlemode matches with enumerate
+            x = len(self.team) # Length of team
+            temp_team = x // 2
+            temp_queue = CircularQueue(x - temp_team) # Initialises temp team, to be the length of the bottom half
+            for i in range(temp_team, x): 
+                temp_queue.append(temp_queue[i]) # FIFO Append bottom half of self.team into temp_queue [4, 5, 6]
+            for i in range(x - 1, temp_queue - 1, -1): # Range starts at the end of the length of self.team and works itself backwards to the end of half of the team length 
+                temp_queue[i] = self.team.serve()    
+                return self.team
+        elif battle_mode == BattleMode.OPTIMISE: # If battlemode matches with enumerate
+
+            #idk
+            raise NotImplementedError
+                
+
+
+            
+
+            
+
+
+
+
+
+        # SET MODE: If special is called during battle, this should reverse the first half of the team
+
+        # ROTATE MODE: If special is called during battle, this should reverse the bottom half of the team
+
+        # OPTIMISE MODE: it toggles the sorting order (from ascending to descending and vice-versa)
+        
         raise NotImplementedError
 
     def __getitem__(self, index: int):
         """
-        Best Case for __getitem__ is O(1), if the user gets a successful index the first time
-        Worst Case for __getitem__ is O(n), where n is the number of attempts the user inputs,
-        as it will repeat n amount of times until the user get a valid index
+        Best Case for __getitem__ is O(1), if index is valid
+        Worst Case for __getitem__ is O(n), where n is the number of invalid index attempts
+        as it will repeat n amount of times until a valid index 
         """
-        poke_team = self.team # Makes poke_team the array
-        index = int(input("Enter an index to retrieve a Pokemon: ")) # Ask user input what index
-        try:
-            pokemon = poke_team[index] # Tries to see if user input index is within list
+        try: # Tries to see if index is within list
+            pokemon = self.team[index] # Gets pokemon
             print(f"The Pokemon at index {index} is: {pokemon}") #print
         except IndexError: # If not in list, raise error
             print("Invalid index. Please enter an index within the range of the team.")
-        
 
     def __len__(self):
         """
@@ -148,6 +182,9 @@ class Trainer:
         return self.name # Gets trainer name
 
     def register_pokemon(self, pokemon: Pokemon) -> None:
+        """
+        Best and Worse Case is O(1) as all operations are constant time and bit vectors do not need resizing
+        """
         self.pokedex.add(pokemon.get_poketype().value+1) # Gets type of pokemon, assigns to a numerical value and adds a 1 to it in Pokedex
 
 
@@ -159,9 +196,6 @@ class Trainer:
         return round(pokedex_completion, 2) # Round to 2d.p
 
     def __str__(self) -> str:
-        """
-        Best and Worse Case is O(1) as just print
-        """
         print(f"Trainer {Trainer.get_name}\n Pokedex Completion: {Trainer.get_pokedex_completion}%")
                 
 if __name__ == '__main__':
