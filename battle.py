@@ -13,6 +13,9 @@ class Battle:
         self.criterion = criterion
 
     def commence_battle(self) -> Trainer | None:
+        """
+        BIG O
+        """
         winner_team = None # Initialises winner_team
         if self.battle_mode == BattleMode.SET: # Depending on which battle mode selected, it will procees with the following simulation
             winner_team = self.set_battle()
@@ -30,6 +33,10 @@ class Battle:
         return None # If no winner
         
     def _create_teams(self) -> None:
+        """
+        BIG O
+        """
+
         self.trainer_1.poke_team.assemble_team(self.battle_mode) #assemble teams to t1 and t2
         self.trainer_2.poke_team.assemble_team(self.battle_mode)
 
@@ -64,6 +71,9 @@ class Battle:
     #     return usable_team # Return boolean
     
     def battle_round(self, attacker, defender) -> None: # Attacker intial turn
+        """
+        BIG O
+        """
         attack_damage = ceil(attacker.attack(defender) * (self.trainer_1.get_pokedex_completion() / self.trainer_2.get_pokedex_completion())) # Calculates new attack damage from the pokemon's attack multiplied by the ratio of the attackers and defenders pokedex completion
         defender.defend(attack_damage) # Decrease the defender (pokemon) hp by the newly calculated attack
 
@@ -72,6 +82,9 @@ class Battle:
             attacker.defend(counter_attack_damage)
 
     def simultaneous_attack(self, pokemon_1, pokemon_2) -> None: # Both pokemon attack each other
+        """
+        BIG O
+        """
         attack_damage_1 = ceil(pokemon_1.battle_power(pokemon_2) * (self.trainer_1.get_pokedex_completion() / self.trainer_2.get_pokedex_completion()))
         attack_damage_2 = ceil(pokemon_2.battle_power(pokemon_1) * (self.trainer_2.get_pokedex_completion() / self.trainer_1.get_pokedex_completion()))
 
@@ -81,6 +94,9 @@ class Battle:
     # Note: These are here for your convenience
     # If you prefer you can ignore them
     def set_battle(self) -> PokeTeam | None:
+        """
+        BIG O
+        """
         self._create_teams()
         while len(self.trainer_1.poke_team.team) > 0 and len(self.trainer_2.poke_team.team) > 0: # While length of both teams is >0
             t1_pokemon = self.trainer_1.poke_team.team[len(self.trainer_1.poke_team.team) - 1] # Intialises last index in team to be current pokemon for t1
@@ -114,13 +130,15 @@ class Battle:
         elif len(self.trainer_2.poke_team.team) > 0: # Vice versa
             return self.trainer_2.poke_team.team
 
-        
-
     def rotate_battle(self) -> PokeTeam | None:
+        """
+        BIG O
+        """
         self._create_teams()
-        while not self.trainer_1.poke_team.team.is_empty() and not self.trainer_2.poke_team.team.is_empty():
-            t1_pokemon = self.trainer_1.poke_team.team[len(self.trainer_1.poke_team.team) - 1] # Intialises last index in team to be current pokemon for t1
-            t2_pokemon = self.trainer_2.poke_team.team[len(self.trainer_2.poke_team.team) - 1] # Intialises last index in team to be current pokemon for t2
+        while not self.trainer_1.poke_team.team.is_empty() and not self.trainer_2.poke_team.team.is_empty(): # While both team stacks are not empty
+            
+            t1_pokemon = self.trainer_1.poke_team.team.serve() # Assigns t1's first pokemon
+            t2_pokemon = self.trainer_2.poke_team.team.serve() # Assigns t2's first pokemon
 
             # Calculate Speeds
             if t1_pokemon.speed > t2_pokemon.speed: # If t1 speed is faster than t2 speed
@@ -137,17 +155,24 @@ class Battle:
             
             if not t1_pokemon.is_alive() and t2_pokemon.is_alive(): # If t2_pokemon is alive and other is not
                 t2_pokemon.level_up() # Level up t2_pokemon
-                self.trainer_1.poke_team.team.pop() # Pops t1_pokemon
+                self.trainer_2.poke_team.team.append(t2_pokemon) # Appends t2_pokemon to the start of the array (which is the back)
             elif t1_pokemon.is_alive() and not t2_pokemon.is_alive(): # If t1_pokemon is alive and other is not 
                 t1_pokemon.level_up() # Level up t1_pokemon
-                self.trainer_1.poke_team.team.pop() # Pops t2_pokemon
+                self.trainer_1.poke_team.team.append(t1_pokemon) # # Appends t1_pokemon to the start of the array (which is the back)
             elif not t1_pokemon.is_alive() and not t2_pokemon.is_alive(): # If both pokemon die
                 pass # Nothing happens
-        # Checks winner
-        self.end_battle()
+
+        # Return the winning team
+        if self.trainer_1.poke_team.team.is_empty(): # If t1 team length is empty
+            return self.trainer_2.poke_team.team #t2 wins
+        elif self.trainer_2.poke_team.team.is_empty(): # Vice versa
+            return self.trainer_1.poke_team.team
 
     def optimise_battle(self) -> PokeTeam | None:
-        while self.check_usable_team(self.trainer_1.poke_team.team) and self.check_usable_team(self.trainer_1.poke_team.team): # While there is atleast one alive pokemon in each team
+        """
+        BIG O
+        """
+        # check if team alive
         #write stuff
         
         self.end_battle()

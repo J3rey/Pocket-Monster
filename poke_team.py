@@ -46,7 +46,6 @@ class PokeTeam:
             self.team[i] = all_pokemon[rand_int]()
             self.team_count += 1
 
-
     def regenerate_team(self, battle_mode: BattleMode, criterion: str = None) -> None:
         """
         Best and Worse Case is O(n), where n is the length of team
@@ -57,6 +56,9 @@ class PokeTeam:
             pokemon.is_alive() # Calls method to make pokemon register as alive
 
     def assign_team(self, criterion: str = None) -> None:
+        """
+        BIG O
+        """
         if criterion is None: # If no criterion then return
             return
 
@@ -90,7 +92,9 @@ class PokeTeam:
             
     
     def special(self, battle_mode: BattleMode) -> None:
-
+        """
+        BIG O
+        """
         if battle_mode == BattleMode.SET: # If battlemode matches with enumerate
             x = len(self.team) # Length of team
             temp_team = x // 2 
@@ -99,7 +103,6 @@ class PokeTeam:
                 half_stack.push(self.team[i])
             for i in range(half_stack): 
                 self.team[i] = half_stack.pop() # LIFO, pops first 3 pokemon into original team, reversing first 3 pokemon
-            return self.team
         elif battle_mode == BattleMode.ROTATE: # If battlemode matches with enumerate
             x = len(self.team) # Length of team
             temp_team = x // 2
@@ -108,15 +111,10 @@ class PokeTeam:
                 temp_queue.append(temp_queue[i]) # FIFO Append bottom half of self.team into temp_queue [4, 5, 6]
             for i in range(x - 1, temp_queue - 1, -1): # Range starts at the end of the length of self.team and works itself backwards to the end of half of the team length 
                 temp_queue[i] = self.team.serve()    
-                return self.team
-        elif battle_mode == BattleMode.OPTIMISE: # If battlemode matches with enumerate
+        if battle_mode == BattleMode.OPTIMISE: # If battlemode matches with enumerate
+            descending_order = self.team[::-1] # Changes ascending to descending order, makes [0], highest attribute
+            self.team = descending_order
 
-            #idk
-            raise NotImplementedError
-
-        # OPTIMISE MODE: it toggles the sorting order (from ascending to descending and vice-versa)
-        
-        raise NotImplementedError
 
     def __getitem__(self, index: int):
         """
@@ -149,7 +147,6 @@ class PokeTeam:
         return team_str
 
 class Trainer:
-
     def __init__(self, name) -> None:
         self.name = name # Initialises Trainer Class
         self.poke_team = PokeTeam() # Initialises Pokemon Team
