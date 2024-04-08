@@ -1,11 +1,8 @@
 from pokemon import *
 import random
-from typing import List
 from battle_mode import BattleMode
-from ctypes import py_object
 from battle_mode import BattleMode
 from data_structures.bset import BSet
-from data_structures.set_adt import Set 
 from data_structures.stack_adt import ArrayStack
 from data_structures.queue_adt import CircularQueue
 from data_structures.array_sorted_list import ArraySortedList
@@ -16,7 +13,7 @@ class PokeTeam:
     CRITERION_LIST = ["health", "defence", "battle_power", "speed", "level"]
 
     def __init__(self):
-        self.team = ArrayR(6) # Initialise array size
+        self.team = None # Initialise array size
         self.team_count = 0
 
     """
@@ -39,6 +36,7 @@ class PokeTeam:
                 print("Invalid Pokemon name, try again") # If user inputs invalid pokemon, try again until done or reached team limit
 
     def choose_randomly(self) -> None:
+        self.team = ArrayR(PokeTeam.TEAM_LIMIT)
         all_pokemon = get_all_pokemon_types()
         self.team_count = 0
         for i in range(self.TEAM_LIMIT):
@@ -119,14 +117,13 @@ class PokeTeam:
     def __getitem__(self, index: int):
         """
         Best Case for __getitem__ is O(1), if index is valid
-        Worst Case for __getitem__ is O(n), where n is the number of invalid index attempts
+        Worst Case for __getitem__ is O(1), as operations are constant time
         as it will repeat n amount of times until a valid index 
         """
-        try: # Tries to see if index is within list
-            pokemon = self.team[index] # Gets pokemon
-            print(f"The Pokemon at index {index} is: {pokemon}") #print
-        except IndexError: # If not in list, raise error
-            print("Invalid index. Please enter an index within the range of the team.")
+        if 0 <= index < len(self.team): # Checks if index is within length of team
+            return self.team[index] #returns pokemon
+        else:
+            raise IndexError('Index out of bounds')
 
     def __len__(self):
         """
@@ -158,9 +155,9 @@ class Trainer:
         Worst Case = Best Case = O(1)
         """
         if method == "Random":
-            PokeTeam.choose_randomly()
+            self.poke_team.choose_randomly # Call random team
         elif method == "Manual":
-            PokeTeam.choose_manually()
+            self.poke_team.choose_manually # Call manual team
         else:
             raise ValueError("Invalid input. Enter either 'Random' or 'Manual'") # If input is invalid, raise error
 
@@ -185,6 +182,9 @@ class Trainer:
         return round(pokedex_completion, 1) # Round to 1d.p
 
     def __str__(self) -> str:
+        """
+        Big O
+        """
         completed_pokedex = int(self.get_pokedex_completion() * 100)
         return f"Trainer {self.get_name()} Pokedex Completion: {completed_pokedex}%"
               
