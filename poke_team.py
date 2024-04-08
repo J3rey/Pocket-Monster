@@ -13,7 +13,7 @@ class PokeTeam:
     CRITERION_LIST = ["health", "defence", "battle_power", "speed", "level"]
 
     def __init__(self):
-        self.team = None # Initialise array size
+        self.team = None 
         self.team_count = 0
 
     """
@@ -36,7 +36,7 @@ class PokeTeam:
                 print("Invalid Pokemon name, try again") # If user inputs invalid pokemon, try again until done or reached team limit
 
     def choose_randomly(self) -> None:
-        self.team = ArrayR(PokeTeam.TEAM_LIMIT)
+        self.team = ArrayR(PokeTeam.TEAM_LIMIT) # Initialise array size to TEAM_LIMIT
         all_pokemon = get_all_pokemon_types()
         self.team_count = 0
         for i in range(self.TEAM_LIMIT):
