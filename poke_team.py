@@ -57,8 +57,18 @@ class PokeTeam:
             pokemon.is_alive() # Calls method to make pokemon register as alive
 
     def assign_team(self, criterion: str = None) -> None:
-        #Next Task
-        raise NotImplementedError
+        if criterion is None: # If no criterion then return
+            return
+
+        if criterion not in self.CRITERION_LIST: # Check if input is in CRITERION_LIST
+            raise ValueError(f"Invalid criterion: {criterion}")
+
+        optimise_team = ArraySortedList(len(self.team)) # Initialise ArraySortedList
+
+        for pokemon in self.team:
+            optimise_team.add(pokemon, getattr(pokemon, criterion)) # Adds each pokemon into optimise_team and gets the value of the pokemons specificed criterion
+        
+        self.team = [optimise_team[i] for i in range(len(optimise_team))] # New team order with the sorted order from ArraySortedList, lowest attr at [0] and highest attr at [x]
 
     def assemble_team(self, battle_mode: BattleMode) -> None:
         """
@@ -76,10 +86,8 @@ class PokeTeam:
                 rotate_team.append(pokemon)
             self.team = rotate_team # New team order
         elif battle_mode == BattleMode.OPTIMISE: # If battlemode matches with enumerate
-            optimise_team = ArraySortedList(len(self.team)) # Initialise ArraySortedList
-            for pokemon in self.team:
-                optimise_team.add(pokemon)
-            self.team = optimise_team # New team order
+            return self.assign_team()
+            
     
     def special(self, battle_mode: BattleMode) -> None:
 
