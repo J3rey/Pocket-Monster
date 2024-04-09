@@ -55,7 +55,17 @@ class PokeTeam:
 
     def assign_team(self, criterion: str = None) -> None:
         """
-        BIG O
+        Worst Case is O(n(n*Comp<), where n is the length of self.team, this is when 
+        the team is not already not sorted in ascending order according to its criterion, 
+        as each pokemon from self.team is transferred to the new initialized array, then 
+        according to the criterion each pokemon is compared to be ordered from the lowest 
+        to highest attribute. 
+        Best Case is O(n(n*Comp<), where n is the length of self.team, this is when the 
+        team is coincidently already sorted in ascending order according to its criterion, 
+        as each pokemon from self.team still needs to be transferred to the new initialized 
+        array, as there is no recognition of the criterions have already been sorted, each 
+        pokemon will still be compared to be ordered from the lowest to highest attribute. 
+
         """
         if criterion is None: # If no criterion then return
             return
@@ -72,8 +82,11 @@ class PokeTeam:
 
     def assemble_team(self, battle_mode: BattleMode) -> None:
         """
-        Worst Case is O(n), where n is the length of the team, as it needs to append to the new specified teams, set, rotate and optimise
-        Best Case is O(n), where n is the length of the team, as it need to choose a battle_mode must be chosen
+        Worst Case is O(n(n*Comp<), where n is the length of self.team, as when battle_mode is OPTIMISE, 
+        a sorted_list array is initialized and each pokemon from self.team is transferred to the new initialized 
+        array, then according to the criterion each pokemon is compared to be ordered from the lowest to highest attribute. 
+        Best Case is O(n), where n is the length of self.team, as when battle_mode chosen is SET or ROTATE as 
+        these battle modes just initialise an array and is transfers each pokemon from self.team to the new initialized array 
         """
         if battle_mode == BattleMode.SET: # If battlemode matches with enumerate
             set_team = ArrayStack(len(self.team)) # Initialise ArrayStack
@@ -133,9 +146,9 @@ class PokeTeam:
 
     def __str__(self):
         """
-        Best Case for __str__ is O(1) if the list is empty
-        Worst Case for __str__ is O(n), where n is the length of the team, as it 
-        would have to loop through the team
+        Best Case for __str__ is O(1) if the team only had one pokemon and had to only print 1 pokemon
+        Worst Case is O(n), where n is the length of the team, as it would have to iterate and print
+        each pokemon in the team
         """
         team_str = "Pokemon Team:\n"
         # Displays all pokemon in the current team

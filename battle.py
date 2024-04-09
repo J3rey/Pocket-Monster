@@ -14,7 +14,13 @@ class Battle:
 
     def commence_battle(self) -> Trainer | None:
         """
-        BIG O
+        Worst Case is O(min(N, M)), where N is the length of poketeam1 and M is the length of 
+        poketeam2, when the loop will continue until the one of the teams is completely wiped 
+        out. The Big O implies that the loop will continue iterating until a team hits the smallest 
+        size, 0. Therefore, this is the maximum amount of rounds it can have.
+        Best Case is O(1), when the battle function is called, both team lengths are 1 and a pokemon 
+        is able to faint the pokemon in 1 turn. This is due to the operations in set_battle all run 
+        constant time as most of them are math operations.
         """
         winner_team = None # Initialises winner_team
         if self.battle_mode == BattleMode.SET: # Depending on which battle mode selected, it will procees with the following simulation
@@ -34,14 +40,21 @@ class Battle:
         
     def _create_teams(self) -> None:
         """
-        BIG O
+        As the Worst Case for assemble_team is O(n), where n is the length of the team, it has 
+        the same complexity
+        Best Case is O(n), where n is the length of the team, as battle_mode must be chosen 
+        where each pokemon is transferred to the specified ADT.
         """
         self.trainer_1.poke_team.assemble_team(self.battle_mode) # Assemble teams to t1 and t2
         self.trainer_2.poke_team.assemble_team(self.battle_mode)
 
     def battle_round(self, attacker, defender) -> None: # Attacker intial turn
         """
-        BIG O
+        Worst Case is O(1), as all operations are either assignments, math operations or IF 
+        operations which all run constant time, functions used such as attack() and defend() 
+        also run constant time as they are just math operations
+        Best case is O(1), as Worst Case is already constant, O(1)
+
         """
         attack_damage = ceil(attacker.attack(defender) * (self.trainer_1.get_pokedex_completion() / self.trainer_2.get_pokedex_completion())) # Calculates new attack damage from the pokemon's attack multiplied by the ratio of the attackers and defenders pokedex completion
         defender.defend(attack_damage) # Decrease the defender (pokemon) hp by the newly calculated attack
@@ -52,10 +65,13 @@ class Battle:
 
     def simultaneous_attack(self, pokemon_1, pokemon_2) -> None: # Both pokemon attack each other
         """
-        BIG O
+        Worst Case is O(1), as all operations are assignments or math operations, which all run 
+        constant time and function defend() also run constant time
+        Best case is O(1), as Worst Case is already constant, O(1)
+
         """
-        attack_damage_1 = ceil(pokemon_1.battle_power(pokemon_2) * (self.trainer_1.get_pokedex_completion() / self.trainer_2.get_pokedex_completion()))
-        attack_damage_2 = ceil(pokemon_2.battle_power(pokemon_1) * (self.trainer_2.get_pokedex_completion() / self.trainer_1.get_pokedex_completion()))
+        attack_damage_1 = ceil(pokemon_1.attack(pokemon_2) * (self.trainer_1.get_pokedex_completion() / self.trainer_2.get_pokedex_completion()))
+        attack_damage_2 = ceil(pokemon_2.attack(pokemon_1) * (self.trainer_2.get_pokedex_completion() / self.trainer_1.get_pokedex_completion()))
 
         pokemon_1.defence(attack_damage_2) # Decrease both hp
         pokemon_2.defence(attack_damage_1)
@@ -64,7 +80,12 @@ class Battle:
     # If you prefer you can ignore them
     def set_battle(self) -> PokeTeam | None:
         """
-        BIG O
+        Worst Case is O(min(N, M)), where N is the length of poketeam1 and M is the length of poketeam2, when the 
+        loop will continue until the one of the teams is completely wiped out. The Big O implies that the loop 
+        will continue iterating until a team hits the smallest size, 0. Therefore, this is the maximum amount of 
+        rounds it can have.
+        Best Case is O(1), when both team lengths are 1 and a pokemon is able to faint the pokemon in 1 turn. 
+        This is due to the operations in set_battle all run constant time as most of them are math operations.
         """        
         self._create_teams()
         while len(self.trainer_1.poke_team.team) > 0 and len(self.trainer_2.poke_team.team) > 0: # While length of both teams is >0

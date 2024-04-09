@@ -173,7 +173,7 @@ class Pokemon(ABC): # pylint: disable=too-few-public-methods, too-many-instance-
             other_pokemon (Pokemon): The Pokemon that this Pokemon is attacking.
 
         Returns:
-            int: The damage that this Pokemon inflicts on the other Pokemon during an attack.
+            float: The damage that this Pokemon inflicts on the other Pokemon during an attack.
         """
         other_pokemon = Pokemon
         # Compute attack stat vs defence stat
@@ -217,11 +217,9 @@ class Pokemon(ABC): # pylint: disable=too-few-public-methods, too-many-instance-
         Evolves the Pokemon to the next stage in its evolution line, and updates
           its attributes accordingly.
         """
-        # Levels all base stats by x1.5
-        # Pokemon evolves to next in line if not in final evolution
-        if len(self.evolution_line) > 0 and self.evolution_line.index(self.name) != len(self.evolution_line) - 1:
-            self.name = self.evolution_line[self.evolution_line.index(self.name) + 1]
-            self.health *= 1.5
+        if len(self.evolution_line) > 0 and self.evolution_line.index(self.name) != len(self.evolution_line) - 1: # If pokemon not in final evolution
+            self.name = self.evolution_line[self.evolution_line.index(self.name) + 1] # Evolve pokemon
+            self.health *= 1.5 # Update all base stats by x1.5
             self.battle_power *= 1.5
             self.speed *= 1.5
             self.defence *= 1.5
