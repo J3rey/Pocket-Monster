@@ -36,40 +36,9 @@ class Battle:
         """
         BIG O
         """
-
-        self.trainer_1.poke_team.assemble_team(self.battle_mode) #assemble teams to t1 and t2
+        self.trainer_1.poke_team.assemble_team(self.battle_mode) # Assemble teams to t1 and t2
         self.trainer_2.poke_team.assemble_team(self.battle_mode)
 
-    # def set_round_start(self):
-    #     t1_pokemon = self.trainer_1.poke_team.team[-1] # Intialises last index in team to be current pokemon for t1
-    #     t2_pokemon = self.trainer_2.poke_team.team[-1] # Intialises last index in team to be current pokemon for t2
-
-    #     if t1_pokemon.speed > t2_pokemon.speed: # If t1 speed is faster than t2 speed
-    #         self.battle_round(t1_pokemon, t2_pokemon) # t1 is attacker and t2 is defender
-    #     elif t2_pokemon.speed > t1_pokemon.speed: # Vice versa
-    #         self.battle_round(t2_pokemon, t1_pokemon)
-    #     else:
-    #         self.simultaneous_attack(t1_pokemon, t2_pokemon) # If both same speed, then call simultaneous_attack()
-
-    #     self.set_round_end(t1_pokemon, t2_pokemon)
-
-    # def set_round_end(self, t1_pokemon, t2_pokemon):
-    #     if t1_pokemon.is_alive() and t2_pokemon.is_alive(): # If both Pokemon alive, -1 hp from current hp
-    #         t1_pokemon.get_health = t1_pokemon.get_health() - 1 # Gets current hp of pokemon and decrease by -1hp
-    #         t2_pokemon.get_health = t2_pokemon.get_health() - 1
-
-    #     if not t1_pokemon.is_alive() and t2_pokemon.is_alive(): # If t2_pokemon is alive and other is not 
-    #         t2_pokemon.level_up() # Level up t2_pokemon
-
-    #     elif t1_pokemon.is_alive() and not t2_pokemon.is_alive(): # If t1_pokemon is alive and other is not 
-    #         t1_pokemon.level_up() # Level up t1_pokemon
-    #     elif not t1_pokemon.is_alive() and not t2_pokemon.is_alive(): # If both pokemon die
-    #         pass # Nothing happens
-
-    # def check_usable_team(self) -> bool:
-    #     usable_team = any(pokemon.is_alive() for pokemon in self) # If atleast one pokemon is alive in the team 
-    #     return usable_team # Return boolean
-    
     def battle_round(self, attacker, defender) -> None: # Attacker intial turn
         """
         BIG O
@@ -96,7 +65,7 @@ class Battle:
     def set_battle(self) -> PokeTeam | None:
         """
         BIG O
-        """
+        """        
         self._create_teams()
         while len(self.trainer_1.poke_team.team) > 0 and len(self.trainer_2.poke_team.team) > 0: # While length of both teams is >0
             t1_pokemon = self.trainer_1.poke_team.team[len(self.trainer_1.poke_team.team) - 1] # Intialises last index in team to be current pokemon for t1
@@ -120,7 +89,7 @@ class Battle:
                 self.trainer_1.poke_team.team.pop() # Remove dead pokemon (current t1_pokemon) from team
             elif t1_pokemon.is_alive() and not t2_pokemon.is_alive(): # Vice versa
                 t1_pokemon.level_up() 
-                self.trainer_1.poke_team.team.pop() 
+                self.trainer_2.poke_team.team.pop() 
             elif not t1_pokemon.is_alive() and not t2_pokemon.is_alive(): # If both pokemon die
                 pass # Nothing happens
         
@@ -172,12 +141,47 @@ class Battle:
         """
         BIG O
         """
-        # check if team alive
-        #write stuff
-        
-        self.end_battle()
-        raise NotImplementedError
+        criterion = input("Choose an attribute to order your team (level, health, attack, defence, speed): ").lower() # Get the attribute to order the team by
+        if criterion not in PokeTeam.CRITERION_LIST:
+            raise ValueError(f"Invalid criterion: {criterion}")
+        self.criterion = criterion
 
+        PokeTeam.assign_team(self.criterion) # Orders the pokemon team into the criteria (uses method in PokeTeam)
+
+        self.trainer_1.poke_team.assign_team(self.criterion) # Assemble teams to t1 and t2
+        self.trainer_2.poke_team.assign_team(self.criterion)
+
+        while len(self.trainer_1.poke_team.team) > 0 and len(self.trainer_2.poke_team.team) > 0: # While length of both teams is >0
+            t1_pokemon = self.trainer_1.poke_team.team[len(self.trainer_1.poke_team.team) - 1] # Intialises last index in team to be current pokemon for t1
+            t2_pokemon = self.trainer_2.poke_team.team[len(self.trainer_2.poke_team.team) - 1] # Intialises last index in team to be current pokemon for t2
+
+            # Calculates Speed
+            if t1_pokemon.speed > t2_pokemon.speed: # If t1 speed is faster than t2 speed
+                self.battle_round(t1_pokemon, t2_pokemon) # t1 is attacker and t2 is defender
+            elif t2_pokemon.speed > t1_pokemon.speed: # Vice versa
+                self.battle_round(t2_pokemon, t1_pokemon)
+            else:
+                self.simultaneous_attack(t1_pokemon, t2_pokemon) # If both same speed, then call simultaneous_attack()
+
+            # Check pokemon vitality
+            if t1_pokemon.is_alive() and t2_pokemon.is_alive(): # If both Pokemon alive, -1 hp from current hp
+                t1_pokemon.get_health = t1_pokemon.get_health() - 1 # Gets current hp of pokemon and decrease by -1hp
+                t2_pokemon.get_health = t2_pokemon.get_health() - 1
+            
+            if not t1_pokemon.is_alive() and t2_pokemon.is_alive(): # If t2_pokemon is alive and other is not
+                t2_pokemon.level_up() # Level up t2_pokemon
+                self.trainer_1.poke_team.team.delete_at_index(len(self.trainer_1.poke_team.team) - 1) # Remove dead pokemon (current t1_pokemon) from team
+            elif t1_pokemon.is_alive() and not t2_pokemon.is_alive(): # Vice versa
+                t1_pokemon.level_up() 
+                self.trainer_1.poke_team.team.delete_at_index(len(self.trainer_1.poke_team.team) - 1)
+            elif not t1_pokemon.is_alive() and not t2_pokemon.is_alive(): # If both pokemon die
+                pass # Nothing happens
+        
+        # Return the winning team
+        if len(self.trainer_1.poke_team.team) > 0: # If t1 team length > 0 
+            return self.trainer_1.poke_team.team #t1 wins
+        elif len(self.trainer_2.poke_team.team) > 0: # Vice versa
+            return self.trainer_2.poke_team.team
 
 if __name__ == '__main__':
     t1 = Trainer('Ash')
