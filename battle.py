@@ -173,8 +173,8 @@ class Battle:
         self.trainer_2.poke_team.assign_team(self.criterion)
 
         while len(self.trainer_1.poke_team.team) > 0 and len(self.trainer_2.poke_team.team) > 0: # While length of both teams is >0
-            t1_pokemon = self.trainer_1.poke_team.team[len(self.trainer_1.poke_team.team) - 1] # Intialises last index in team to be current pokemon for t1
-            t2_pokemon = self.trainer_2.poke_team.team[len(self.trainer_2.poke_team.team) - 1] # Intialises last index in team to be current pokemon for t2
+            t1_pokemon = self.trainer_1.poke_team.team[len(self.trainer_1.poke_team.team) - 1] # Gets last index in team to be current pokemon for t1
+            t2_pokemon = self.trainer_2.poke_team.team[len(self.trainer_2.poke_team.team) - 1] # Gets last index in team to be current pokemon for t2
 
             # Calculates Speed
             if t1_pokemon.speed > t2_pokemon.speed: # If t1 speed is faster than t2 speed
@@ -191,7 +191,7 @@ class Battle:
             
             if not t1_pokemon.is_alive() and t2_pokemon.is_alive(): # If t2_pokemon is alive and other is not
                 t2_pokemon.level_up() # Level up t2_pokemon
-                self.trainer_1.poke_team.team.delete_at_index(len(self.trainer_1.poke_team.team) - 1) # Remove dead pokemon (current t1_pokemon) from team
+                self.trainer_1.poke_team.team.delete_at_index(len(self.trainer_1.poke_team.team) - 1) # Remove dead pokemon (current t1_pokemon) from team (Not working)
             elif t1_pokemon.is_alive() and not t2_pokemon.is_alive(): # Vice versa
                 t1_pokemon.level_up() 
                 self.trainer_1.poke_team.team.delete_at_index(len(self.trainer_1.poke_team.team) - 1)
