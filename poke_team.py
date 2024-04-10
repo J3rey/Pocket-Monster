@@ -16,13 +16,13 @@ class PokeTeam:
         self.team = None 
         self.team_count = 0
 
-    """
-    Best case for choose_manually is is O(1), if the user is 'done' and stores no pokemon
-    Worst case for choose_manually is O(n), where n the number of user inputs. As it iterates 
-    over user pokemon choices, appending valid options to self.team until the team limit has 
-    been reached the user is done
-    """
     def choose_manually(self):
+        """
+        Best case for choose_manually is is O(1), if the user is 'done' and stores no pokemon
+        Worst case for choose_manually is O(n), where n the number of user inputs. As it iterates 
+        over user pokemon choices, appending valid options to self.team until the team limit has 
+        been reached the user is done
+        """
         self.team = ArrayR(1) # Initialise array size
         while len(self.team) < PokeTeam.TEAM_LIMIT: # While team Array is less TEAM_LIMIT (6)
             pokemon_choice = input("Enter a Pokemon's name or 'done': ") # Requests user pokemon choices
@@ -123,7 +123,7 @@ class PokeTeam:
             for i in range(x - 1, temp_queue - 1, -1): # Range starts at the end of the length of self.team and works itself backwards to the end of half of the team length 
                 temp_queue[i] = self.team.serve()    
         if battle_mode == BattleMode.OPTIMISE: # If battlemode matches with enumerate
-            descending_order = self.team[::-1] # Changes ascending to descending order, makes [0], highest attribute
+            descending_order = self.team[::-1] # Changes ascending to descending order, makes [0], highest attribute (does not work)
             self.team = descending_order
 
 
@@ -140,7 +140,7 @@ class PokeTeam:
 
     def __len__(self):
         """
-        Best and Worse Case is O(1) as it only returns 
+        Best Case and Worst Case = O(1) as all operations run constant time
         """
         return len(self.team) # Returns length of team
 
@@ -158,6 +158,9 @@ class PokeTeam:
 
 class Trainer:
     def __init__(self, name) -> None:
+        """
+        Best Case and Worst Case = O(1) as all operations run constant time
+        """
         self.name = name # Initialises Trainer Class
         self.poke_team = PokeTeam() # Initialises Pokemon Team
         self.pokedex = BSet(len(PokeType)+1)# Initialises Trainer Class
@@ -175,9 +178,15 @@ class Trainer:
             raise ValueError("Invalid input. Enter either 'Random' or 'Manual'") # If input is invalid, raise error
 
     def get_team(self) -> PokeTeam:
+        """
+        Best Case and Worst Case = O(1) as all operations run constant time
+        """
         return self.poke_team # Gets current pokemon team
     
     def get_name(self) -> str:
+        """
+        Best Case and Worst Case = O(1) as all operations run constant time
+        """
         return self.name # Gets trainer name
 
     def register_pokemon(self, pokemon: Pokemon) -> None:
@@ -196,7 +205,7 @@ class Trainer:
 
     def __str__(self) -> str:
         """
-        Big O
+        Best Case and Worst Case = O(1) as all operations run constant time
         """
         completed_pokedex = int(self.get_pokedex_completion() * 100)
         return f"Trainer {self.get_name()} Pokedex Completion: {completed_pokedex}%"
