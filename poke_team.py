@@ -1,7 +1,6 @@
 from pokemon import *
 import random
 from battle_mode import BattleMode
-from battle_mode import BattleMode
 from data_structures.bset import BSet
 from data_structures.stack_adt import ArrayStack
 from data_structures.queue_adt import CircularQueue
@@ -104,7 +103,9 @@ class PokeTeam:
     
     def special(self, battle_mode: BattleMode) -> None:
         """
-        BIG O
+        Best Case is O(n), where n is the length of self.team. If the battle_mode selected is SET, as push() and pop() are 
+        both run constant time and there was no need to reverse 
+        Worst Case is also O(n), where n is the length of self.team
         """
         if battle_mode == BattleMode.SET: # If battlemode matches with enumerate
             x = len(self.team) # Length of team
@@ -123,8 +124,11 @@ class PokeTeam:
             for i in range(x - 1, temp_queue - 1, -1): # Range starts at the end of the length of self.team and works itself backwards to the end of half of the team length 
                 temp_queue[i] = self.team.serve()    
         if battle_mode == BattleMode.OPTIMISE: # If battlemode matches with enumerate
-            descending_order = self.team[::-1] # Changes ascending to descending order, makes [0], highest attribute (does not work)
-            self.team = descending_order
+            temp_team = ArrayStack(len(self.team))
+            for i in range(len(self.team)): # LIFO, pushes all pokemon in team to temp
+                temp_team.push(self.team[i])
+            for i in range(temp_team):
+                self.team[i] = temp_team.pop() #LIFO, pops all pokemon in temp to team, reversing 
 
 
     def __getitem__(self, index: int):

@@ -89,8 +89,11 @@ class Battle:
         """        
         self._create_teams()
         while len(self.trainer_1.poke_team.team) > 0 and len(self.trainer_2.poke_team.team) > 0: # While length of both teams is >0
-            t1_pokemon = self.trainer_1.poke_team.team[len(self.trainer_1.poke_team.team) - 1] # Intialises last index in team to be current pokemon for t1
-            t2_pokemon = self.trainer_2.poke_team.team[len(self.trainer_2.poke_team.team) - 1] # Intialises last index in team to be current pokemon for t2
+            t1_length = len(self.trainer_1.poke_team.team) - 1 # Gets last index of t1 team
+            t2_length = len(self.trainer_2.poke_team.team) - 1 # Gets last index of t2 team
+
+            t1_pokemon = self.trainer_1.poke_team.team[t1_length] # Intialises last index in team to be current pokemon for t1
+            t2_pokemon = self.trainer_2.poke_team.team[t2_length] # Intialises last index in team to be current pokemon for t2
 
             # Calculates Speed
             if t1_pokemon.speed > t2_pokemon.speed: # If t1 speed is faster than t2 speed
