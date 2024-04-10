@@ -12,6 +12,9 @@ class BattleTower:
     MIN_LIVES = 1
     MAX_LIVES = 3
     def __init__(self) -> None:
+        """
+        Worst Case = Best Case = O(1) as all operations run constant time
+        """
         self.my_trainer = None
         self.enemy_trainers = [] # Need to make circular init
         self.trainer_lives = 0
@@ -58,4 +61,7 @@ class BattleTower:
         raise ValueError("No battles remaining")
 
     def enemies_defeated(self) -> int:
+        """
+        Worst Case = Best Case = O(1) as all operations run constant time
+        """
         return self.enemies_defeated_count

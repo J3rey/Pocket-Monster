@@ -43,7 +43,14 @@ class TypeEffectiveness:
         Returns:
             float: The effectiveness of the attack, as a float value between 0 and 4.
         """
-    
+
+        """
+        The Best Case and Worst Case are the same because the operations that are performed 
+        are the same for every element in the file, regardless of the scenario. Each line is 
+        split into values, converted to a float and stored into the array. 
+        Best and Worst Case would be O(n*m), where n is the number of lines in the csv, after 
+        the header and m is the number of elements (values) in each row.
+        """
         EFFECT_TABLE = ArrayR(len(PokeType))  # Initialize the array
 
         with open('type_effectiveness.csv', "r") as file:
@@ -174,6 +181,15 @@ class Pokemon(ABC): # pylint: disable=too-few-public-methods, too-many-instance-
 
         Returns:
             float: The damage that this Pokemon inflicts on the other Pokemon during an attack.
+        """
+
+        """
+        Th Best Case and Worst Case are the same as the calculations and methods called inside attack() 
+        as they do not have scenarios or iterations that would differ the complexity.
+        The Best Case and Worst Case = O(1), as most operations are mathematical operations that are constant 
+        time operations. Also the of type effectiveness (TypeEffectiveness.get_effectiveness) is O(1) as well 
+        as it accesses a matrix which is usually O(1) as access time is usually independent of its size.
+
         """
         other_pokemon = Pokemon
         # Compute attack stat vs defence stat
